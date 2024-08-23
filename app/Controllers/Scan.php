@@ -3,31 +3,31 @@
 namespace App\Controllers;
 
 use CodeIgniter\I18n\Time;
-use App\Models\GuruModel;
+use App\Models\KaryawanModel;
 use App\Models\SiswaModel;
-use App\Models\PresensiGuruModel;
+use App\Models\PresensiKaryawanModel;
 use App\Models\PresensiSiswaModel;
 use App\Libraries\enums\TipeUser;
 
 class Scan extends BaseController
 {
    protected SiswaModel $siswaModel;
-   protected GuruModel $guruModel;
+   protected KaryawanModel $karyawanModel;
 
    protected PresensiSiswaModel $presensiSiswaModel;
-   protected PresensiGuruModel $presensiGuruModel;
+   protected PresensiKaryawanModel $presensiKaryawanModel;
 
    public function __construct()
    {
       $this->siswaModel = new SiswaModel();
-      $this->guruModel = new GuruModel();
+      $this->karyawanModel = new KaryawanModel();
       $this->presensiSiswaModel = new PresensiSiswaModel();
-      $this->presensiGuruModel = new PresensiGuruModel();
+      $this->presensiKaryawanModel = new PresensiKaryawanModel();
    }
 
    public function index($t = 'Masuk')
    {
-      $data = ['waktu' => $t, 'title' => 'Absensi Siswa dan Guru Berbasis QR Code'];
+      $data = ['waktu' => $t, 'title' => 'Absensi Karyawan Berbasis QR Code'];
       return view('scan/scan', $data);
    }
 
@@ -44,13 +44,13 @@ class Scan extends BaseController
       $result = $this->siswaModel->cekSiswa($uniqueCode);
 
       if (empty($result)) {
-         // jika cek siswa gagal, cek data guru
-         $result = $this->guruModel->cekGuru($uniqueCode);
+         // jika cek siswa gagal, cek data karyawan
+         $result = $this->karyawanModel->cekKaryawan($uniqueCode);
 
          if (!empty($result)) {
             $status = true;
 
-            $type = TipeUser::Guru;
+            $type = TipeUser::Karyawan;
          } else {
             $status = false;
 
@@ -91,20 +91,20 @@ class Scan extends BaseController
 
       // absen masuk
       switch ($type) {
-         case TipeUser::Guru:
-            $idGuru =  $result['id_guru'];
-            $data['type'] = TipeUser::Guru;
+         case TipeUser::Karyawan:
+            $idKaryawan =  $result['id_karyawan'];
+            $data['type'] = TipeUser::Karyawan;
 
-            $sudahAbsen = $this->presensiGuruModel->cekAbsen($idGuru, $date);
+            $sudahAbsen = $this->presensiKaryawanModel->cekAbsen($idKaryawan, $date);
 
             if ($sudahAbsen) {
-               $data['presensi'] = $this->presensiGuruModel->getPresensiById($sudahAbsen);
+               $data['presensi'] = $this->presensiKaryawanModel->getPresensiById($sudahAbsen);
                return $this->showErrorView('Anda sudah absen hari ini', $data);
             }
 
-            $this->presensiGuruModel->absenMasuk($idGuru, $date, $time);
+            $this->presensiKaryawanModel->absenMasuk($idKaryawan, $date, $time);
 
-            $data['presensi'] = $this->presensiGuruModel->getPresensiByIdGuruTanggal($idGuru, $date);
+            $data['presensi'] = $this->presensiKaryawanModel->getPresensiByIdKaryawanTanggal($idKaryawan, $date);
 
             return view('scan/scan-result', $data);
 
@@ -142,19 +142,19 @@ class Scan extends BaseController
 
       // absen pulang
       switch ($type) {
-         case TipeUser::Guru:
-            $idGuru =  $result['id_guru'];
-            $data['type'] = TipeUser::Guru;
+         case TipeUser::Karyawan:
+            $idKaryawan =  $result['id_karyawan'];
+            $data['type'] = TipeUser::Karyawan;
 
-            $sudahAbsen = $this->presensiGuruModel->cekAbsen($idGuru, $date);
+            $sudahAbsen = $this->presensiKaryawanModel->cekAbsen($idKaryawan, $date);
 
             if (!$sudahAbsen) {
                return $this->showErrorView('Anda belum absen hari ini', $data);
             }
 
-            $this->presensiGuruModel->absenKeluar($sudahAbsen, $time);
+            $this->presensiKaryawanModel->absenKeluar($sudahAbsen, $time);
 
-            $data['presensi'] = $this->presensiGuruModel->getPresensiById($sudahAbsen);
+            $data['presensi'] = $this->presensiKaryawanModel->getPresensiById($sudahAbsen);
 
             return view('scan/scan-result', $data);
 

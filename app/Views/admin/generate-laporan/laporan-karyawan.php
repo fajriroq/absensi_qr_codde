@@ -5,7 +5,7 @@
    <tr>
       <td><img src="<?= getLogo(); ?>" width="100px" height="100px"></img></td>
       <td width="100%">
-         <h2 align="center">DAFTAR HADIR GURU</h2>
+         <h2 align="center">DAFTAR HADIR KARYAWAN</h2>
          <h4 align="center"><?= $generalSettings->school_name; ?></h4>
          <h4 align="center">TAHUN PELAJARAN <?= $generalSettings->school_year; ?></h4>
       </td>
@@ -43,7 +43,7 @@
 
    <?php $i = 0; ?>
 
-   <?php foreach ($listGuru as $guru) : ?>
+   <?php foreach ($listKaryawan as $karyawan) : ?>
       <?php
       $jumlahHadir = count(array_filter($listAbsen, function ($a) use ($i) {
          if ($a['lewat'] || is_null($a[$i]['id_kehadiran'])) return false;
@@ -65,7 +65,7 @@
       ?>
       <tr>
          <td align="center"><?= $i + 1; ?></td>
-         <td><?= $guru['nama_guru']; ?></td>
+         <td><?= $karyawan['nama_karyawan']; ?></td>
          <?php foreach ($listAbsen as $absen) : ?>
             <?= kehadiran($absen[$i]['id_kehadiran'] ?? ($absen['lewat'] ? 5 : 4)); ?>
          <?php endforeach; ?>
@@ -90,16 +90,16 @@
 <br></br>
 <table>
    <tr>
-      <td>Jumlah guru</td>
-      <td>: <?= count($listGuru); ?></td>
+      <td>Jumlah Karyawan</td>
+      <td>: <?= count($listKaryawan); ?></td>
    </tr>
    <tr>
       <td>Laki-laki</td>
-      <td>: <?= $jumlahGuru['laki']; ?></td>
+      <td>: <?= $jumlahKaryawan['laki']; ?></td>
    </tr>
    <tr>
       <td>Perempuan</td>
-      <td>: <?= $jumlahGuru['perempuan']; ?></td>
+      <td>: <?= $jumlahKaryawan['perempuan']; ?></td>
    </tr>
 </table>
 <?php

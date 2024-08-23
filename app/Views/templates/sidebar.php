@@ -6,8 +6,8 @@ switch ($context) {
    case 'kelas':
       $sidebarColor = 'purple';
       break;
-   case 'absen-guru':
-   case 'guru':
+   case 'absen-karyawan':
+   case 'karyawan':
       $sidebarColor = 'green';
       break;
 
@@ -39,36 +39,36 @@ switch ($context) {
                <p>Dashboard</p>
             </a>
          </li>
-         <li class="nav-item <?= $context == 'absen-siswa' ? 'active' : ''; ?>">
+         <!-- <li class="nav-item <?= $context == 'absen-siswa' ? 'active' : ''; ?>">
             <a class="nav-link" href="<?= base_url('admin/absen-siswa'); ?>">
                <i class="material-icons">checklist</i>
                <p>Absensi Siswa</p>
             </a>
-         </li>
-         <li class="nav-item <?= $context == 'absen-guru' ? 'active' : ''; ?>">
-            <a class="nav-link" href="<?= base_url('admin/absen-guru'); ?>">
+         </li> -->
+         <li class="nav-item <?= $context == 'absen-karyawan' ? 'active' : ''; ?>">
+            <a class="nav-link" href="<?= base_url('admin/absen-karyawan'); ?>">
                <i class="material-icons">checklist</i>
-               <p>Absensi Guru</p>
+               <p>Absensi Karyawan</p>
             </a>
          </li>
-         <li class="nav-item <?= $context == 'siswa' ? 'active' : ''; ?>">
+         <!-- <li class="nav-item <?= $context == 'siswa' ? 'active' : ''; ?>">
             <a class="nav-link" href="<?= base_url('admin/siswa'); ?>">
                <i class="material-icons">person</i>
                <p>Data Siswa</p>
             </a>
-         </li>
-         <li class="nav-item <?= $context == 'guru' ? 'active' : ''; ?>">
-            <a class="nav-link" href="<?= base_url('admin/guru'); ?>">
+         </li> -->
+         <li class="nav-item <?= $context == 'karyawan' ? 'active' : ''; ?>">
+            <a class="nav-link" href="<?= base_url('admin/karyawan'); ?>">
                <i class="material-icons">person_4</i>
-               <p>Data Guru</p>
+               <p>Data Karyawan</p>
             </a>
          </li>
-         <li class="nav-item <?= $context == 'kelas' ? 'active' : ''; ?>">
+         <!-- <li class="nav-item <?= $context == 'kelas' ? 'active' : ''; ?>">
             <a class="nav-link" href="<?= base_url('admin/kelas'); ?>">
                <i class="material-icons">school</i>
                <p>Data Kelas & Jurusan</p>
             </a>
-         </li>
+         </li> -->
          <li class="nav-item <?= $context == 'qr' ? 'active' : ''; ?>">
             <a class="nav-link" href="<?= base_url('admin/generate'); ?>">
                <i class="material-icons">qr_code</i>

@@ -21,11 +21,11 @@ if (empty($type)) {
          </div>
       <?php break;
 
-      case TipeUser::Guru: ?>
+      case TipeUser::Karyawan: ?>
          <div class="row w-100">
             <div class="col">
-               <p>Nama : <b><?= $data['nama_guru']; ?></b></p>
-               <p>NUPTK : <b><?= $data['nuptk']; ?></b></p>
+               <p>Nama : <b><?= $data['nama_karyawan']; ?></b></p>
+               <p>NIK : <b><?= $data['nik']; ?></b></p>
                <p>No HP : <b><?= $data['no_hp']; ?></b></p>
             </div>
             <div class="col">

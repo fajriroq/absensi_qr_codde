@@ -21,21 +21,21 @@
                         <div class="nav-tabs-navigation">
                            <div class="row">
                               <div class="col-md-4 col-lg-5">
-                                 <h4 class="card-title"><b>Daftar Guru</b></h4>
+                                 <h4 class="card-title"><b>Daftar Karyawan</b></h4>
                                  <p class="card-category">Angkatan <?= $generalSettings->school_year; ?></p>
                               </div>
                               <div class="ml-md-auto col-auto row">
                                  <div class="col-12 col-sm-auto nav nav-tabs">
                                     <div class="nav-item">
-                                       <a class="nav-link" id="tabBtn" onclick="removeHover()" href="<?= base_url('admin/guru/create'); ?>">
-                                          <i class="material-icons">add</i> Tambah data guru
+                                       <a class="nav-link" id="tabBtn" onclick="removeHover()" href="<?= base_url('admin/karyawan/create'); ?>">
+                                          <i class="material-icons">add</i> Tambah data karyawan
                                           <div class="ripple-container"></div>
                                        </a>
                                     </div>
                                  </div>
                                  <div class="col-12 col-sm-auto nav nav-tabs">
                                     <div class="nav-item">
-                                       <a class="nav-link" id="refreshBtn" onclick="getDataGuru()" href="#" data-toggle="tab">
+                                       <a class="nav-link" id="refreshBtn" onclick="getDataKaryawan()" href="#" data-toggle="tab">
                                           <i class="material-icons">refresh</i> Refresh
                                           <div class="ripple-container"></div>
                                        </a>
@@ -45,8 +45,8 @@
                            </div>
                         </div>
                      </div>
-                     <div id="dataGuru">
-                        <p class="text-center mt-3">Daftar guru muncul disini</p>
+                     <div id="dataKaryawan">
+                        <p class="text-center mt-3">Daftar karyawan muncul disini</p>
                      </div>
                   </div>
                </div>
@@ -57,25 +57,24 @@
    </div>
 </div>
 <script>
-   getDataGuru();
+   getDataKaryawan();
 
-   function getDataGuru() {
+   function getDataKaryawan() {
       jQuery.ajax({
-         url: "<?= base_url('/admin/guru'); ?>",
+         url: "<?= base_url('/admin/karyawan'); ?>",
          type: 'post',
          data: {},
          success: function(response, status, xhr) {
-            // console.log(status);
-            $('#dataGuru').html(response);
+            $('#dataKaryawan').html(response);
 
             $('html, body').animate({
-               scrollTop: $("#dataGuru").offset().top
+               scrollTop: $("#dataKaryawan").offset().top
             }, 500);
             $('#refreshBtn').removeClass('active show');
          },
          error: function(xhr, status, thrown) {
             console.log(thrown);
-            $('#dataGuru').html(thrown);
+            $('#dataKaryawan').html(thrown);
             $('#refreshBtn').removeClass('active show');
          }
       });

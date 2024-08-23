@@ -6,7 +6,7 @@
          <div class="col-lg-12 col-md-12">
             <div class="card">
                <div class="card-header card-header-success">
-                  <h4 class="card-title"><b>Form Tambah Guru</b></h4>
+                  <h4 class="card-title"><b>Form Tambah Karyawan</b></h4>
 
                </div>
                <div class="card-body mx-5 my-3">
@@ -22,15 +22,15 @@
                      </div>
                   <?php endif; ?>
 
-                  <form action="<?= base_url('admin/guru/create'); ?>" method="post">
+                  <form action="<?= base_url('admin/karyawan/create'); ?>" method="post">
                      <?= csrf_field() ?>
                      <?php $validation = \Config\Services::validation(); ?>
 
                      <div class="form-group mt-4">
-                        <label for="nuptk">NUPTK</label>
-                        <input type="text" id="nuptk" class="form-control <?= $validation->getError('nuptk') ? 'is-invalid' : ''; ?>" name="nuptk" placeholder="1234" value="<?= old('nuptk') ?? $oldInput['nuptk'] ?? '' ?>">
+                        <label for="nik">NIK</label>
+                        <input type="text" id="nik" class="form-control <?= $validation->getError('nik') ? 'is-invalid' : ''; ?>" name="nik" placeholder="1234" value="<?= old('nik') ?? $oldInput['nik'] ?? '' ?>">
                         <div class="invalid-feedback">
-                           <?= $validation->getError('nuptk'); ?>
+                           <?= $validation->getError('nik'); ?>
                         </div>
                      </div>
 

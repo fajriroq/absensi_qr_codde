@@ -8,9 +8,9 @@ use DateTime;
 use DateInterval;
 use DatePeriod;
 
-use App\Models\GuruModel;
+use App\Models\KaryawanModel;
 use App\Models\KelasModel;
-use App\Models\PresensiGuruModel;
+use App\Models\PresensiKaryawanModel; // Update model presensi guru ke karyawan
 use App\Models\SiswaModel;
 use App\Models\PresensiSiswaModel;
 
@@ -19,26 +19,26 @@ class GenerateLaporan extends BaseController
    protected SiswaModel $siswaModel;
    protected KelasModel $kelasModel;
 
-   protected GuruModel $guruModel;
+   protected KaryawanModel $karyawanModel; // Update guruModel menjadi karyawanModel
 
    protected PresensiSiswaModel $presensiSiswaModel;
-   protected PresensiGuruModel $presensiGuruModel;
+   protected PresensiKaryawanModel $presensiKaryawanModel; // Update presensiGuruModel menjadi presensiKaryawanModel
 
    public function __construct()
    {
       $this->siswaModel = new SiswaModel();
       $this->kelasModel = new KelasModel();
 
-      $this->guruModel = new GuruModel();
+      $this->karyawanModel = new KaryawanModel(); // Update guruModel menjadi karyawanModel
 
       $this->presensiSiswaModel = new PresensiSiswaModel();
-      $this->presensiGuruModel = new PresensiGuruModel();
+      $this->presensiKaryawanModel = new PresensiKaryawanModel(); // Update presensiGuruModel menjadi presensiKaryawanModel
    }
 
    public function index()
    {
       $kelas = $this->kelasModel->getDataKelas();
-      $guru = $this->guruModel->getAllGuru();
+      $karyawan = $this->karyawanModel->getAllKaryawan(); // Update getAllGuru menjadi getAllKaryawan
 
       $siswaPerKelas = [];
 
@@ -51,7 +51,7 @@ class GenerateLaporan extends BaseController
          'ctx' => 'laporan',
          'siswaPerKelas' => $siswaPerKelas,
          'kelas' => $kelas,
-         'guru' => $guru
+         'karyawan' => $karyawan // Update guru menjadi karyawan
       ];
 
       return view('admin/generate-laporan/generate-laporan', $data);
@@ -138,20 +138,20 @@ class GenerateLaporan extends BaseController
       return view('admin/generate-laporan/laporan-siswa', $data) . view('admin/generate-laporan/topdf');
    }
 
-   public function generateLaporanGuru()
+   public function generateLaporanKaryawan() // Update generateLaporanGuru menjadi generateLaporanKaryawan
    {
-      $guru = $this->guruModel->getAllGuru();
+      $karyawan = $this->karyawanModel->getAllKaryawan(); // Update getAllGuru menjadi getAllKaryawan
       $type = $this->request->getVar('type');
 
-      if (empty($guru)) {
+      if (empty($karyawan)) {
          session()->setFlashdata([
-            'msg' => 'Data guru kosong!',
+            'msg' => 'Data karyawan kosong!', // Update pesan
             'error' => true
          ]);
          return redirect()->to('/admin/laporan');
       }
 
-      $bulan = $this->request->getVar('tanggalGuru');
+      $bulan = $this->request->getVar('tanggalKaryawan'); // Update tanggalGuru menjadi tanggalKaryawan
 
       // hari pertama dalam 1 bulan
       $begin = new Time($bulan, locale: 'id');
@@ -170,7 +170,7 @@ class GenerateLaporan extends BaseController
          if (!($value->format('D') == 'Sat' || $value->format('D') == 'Sun')) {
             $lewat = Time::parse($value->format('Y-m-d'))->isAfter(Time::today());
 
-            $absenByTanggal = $this->presensiGuruModel
+            $absenByTanggal = $this->presensiKaryawanModel
                ->getPresensiByTanggal($value->format('Y-m-d'));
 
             $absenByTanggal['lewat'] = $lewat;
@@ -182,7 +182,7 @@ class GenerateLaporan extends BaseController
 
       $laki = 0;
 
-      foreach ($guru as $value) {
+      foreach ($karyawan as $value) {
          if ($value['jenis_kelamin'] != 'Perempuan') {
             $laki++;
          }
@@ -192,24 +192,24 @@ class GenerateLaporan extends BaseController
          'tanggal' => $arrayTanggal,
          'bulan' => $begin->toLocalizedString('MMMM'),
          'listAbsen' => $dataAbsen,
-         'listGuru' => $guru,
-         'jumlahGuru' => [
+         'listKaryawan' => $karyawan, // Update listGuru menjadi listKaryawan
+         'jumlahKaryawan' => [ // Update jumlahGuru menjadi jumlahKaryawan
             'laki' => $laki,
-            'perempuan' => count($guru) - $laki
+            'perempuan' => count($karyawan) - $laki
          ],
-         'grup' => 'guru',
+         'grup' => 'karyawan',
       ];
 
       if ($type == 'doc') {
          $this->response->setHeader('Content-type', 'application/vnd.ms-word');
          $this->response->setHeader(
             'Content-Disposition',
-            'attachment;Filename=laporan_absen_guru_' . $begin->toLocalizedString('MMMM-Y') . '.doc'
+            'attachment;Filename=laporan_absen_karyawan_' . $begin->toLocalizedString('MMMM-Y') . '.doc' // Update laporan_absen_guru menjadi laporan_absen_karyawan
          );
 
-         return view('admin/generate-laporan/laporan-guru', $data);
+         return view('admin/generate-laporan/laporan-karyawan', $data); // Update view
       }
 
-      return view('admin/generate-laporan/laporan-guru', $data) . view('admin/generate-laporan/topdf');
+      return view('admin/generate-laporan/laporan-karyawan', $data) . view('admin/generate-laporan/topdf'); // Update view
    }
 }

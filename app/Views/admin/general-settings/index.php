@@ -14,7 +14,7 @@
                         <form action="<?= base_url('admin/general-settings/update'); ?>" method="post" enctype="multipart/form-data">
                             <?= csrf_field() ?>
                             <div class="form-group mt-4">
-                                <label for="school_name">Nama Sekolah</label>
+                                <label for="school_name">Nama DESA</label>
                                 <input type="text" id="school_name" class="form-control <?= invalidFeedback('school_name') ? 'is-invalid' : ''; ?>" name="school_name" placeholder="SMK 1 Indonesia" value="<?= $generalSettings->school_name; ?>" required>
                                 <div class="invalid-feedback">
                                     <?= invalidFeedback('school_name'); ?>
@@ -22,7 +22,7 @@
                             </div>
 
                             <div class="form-group mt-4">
-                                <label for="school_year">Tahun Ajaran</label>
+                                <label for="school_year">Tahun Berdiri</label>
                                 <input type="text" id="school_year" class="form-control <?= invalidFeedback('school_year') ? 'is-invalid' : ''; ?>" name="school_year" placeholder="2024/2025" value="<?= $generalSettings->school_year; ?>" required>
                                 <div class="invalid-feedback">
                                     <?= invalidFeedback('school_year'); ?>

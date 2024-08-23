@@ -7,12 +7,12 @@ use CodeIgniter\I18n\Time;
 use CodeIgniter\Model;
 use App\Libraries\enums\Kehadiran;
 
-class PresensiGuruModel extends Model implements PresensiInterface
+class PresensiKaryawanModel extends Model implements PresensiInterface
 {
    protected $primaryKey = 'id_presensi';
 
    protected $allowedFields = [
-      'id_guru',
+      'id_karyawan',
       'tanggal',
       'jam_masuk',
       'jam_keluar',
@@ -20,11 +20,11 @@ class PresensiGuruModel extends Model implements PresensiInterface
       'keterangan'
    ];
 
-   protected $table = 'tb_presensi_guru';
+   protected $table = 'tb_presensi_karyawan';
 
    public function cekAbsen(string|int $id, string|Time $date)
    {
-      $result = $this->where(['id_guru' => $id, 'tanggal' => $date])->first();
+      $result = $this->where(['id_karyawan' => $id, 'tanggal' => $date])->first();
 
       if (empty($result)) return false;
 
@@ -34,7 +34,7 @@ class PresensiGuruModel extends Model implements PresensiInterface
    public function absenMasuk(string $id, $date, $time)
    {
       $this->save([
-         'id_guru' => $id,
+         'id_karyawan' => $id,
          'tanggal' => $date,
          'jam_masuk' => $time,
          // 'jam_keluar' => '',
@@ -51,9 +51,9 @@ class PresensiGuruModel extends Model implements PresensiInterface
       ]);
    }
 
-   public function getPresensiByIdGuruTanggal($idGuru, $date)
+   public function getPresensiByIdKaryawanTanggal($idKaryawan, $date)
    {
-      return $this->where(['id_guru' => $idGuru, 'tanggal' => $date])->first();
+      return $this->where(['id_karyawan' => $idKaryawan, 'tanggal' => $date])->first();
    }
 
    public function getPresensiById(string $idPresensi)
@@ -63,27 +63,27 @@ class PresensiGuruModel extends Model implements PresensiInterface
 
    public function getPresensiByTanggal($tanggal)
    {
-      return $this->setTable('tb_guru')
+      return $this->setTable('tb_karyawan')
          ->select('*')
          ->join(
-            "(SELECT id_presensi, id_guru AS id_guru_presensi, tanggal, jam_masuk, jam_keluar, id_kehadiran, keterangan FROM tb_presensi_guru) tb_presensi_guru",
-            "{$this->table}.id_guru = tb_presensi_guru.id_guru_presensi AND tb_presensi_guru.tanggal = '$tanggal'",
+            "(SELECT id_presensi, id_karyawan AS id_karyawan_presensi, tanggal, jam_masuk, jam_keluar, id_kehadiran, keterangan FROM tb_presensi_karyawan) tb_presensi_karyawan",
+            "{$this->table}.id_karyawan = tb_presensi_karyawan.id_karyawan_presensi AND tb_presensi_karyawan.tanggal = '$tanggal'",
             'left'
          )
          ->join(
             'tb_kehadiran',
-            'tb_presensi_guru.id_kehadiran = tb_kehadiran.id_kehadiran',
+            'tb_presensi_karyawan.id_kehadiran = tb_kehadiran.id_kehadiran',
             'left'
          )
-         ->orderBy("nama_guru")
+         ->orderBy("nama_karyawan")
          ->findAll();
    }
 
    public function getPresensiByKehadiran(string $idKehadiran, $tanggal)
    {
       $this->join(
-         'tb_guru',
-         "tb_presensi_guru.id_guru = tb_guru.id_guru AND tb_presensi_guru.tanggal = '$tanggal'",
+         'tb_karyawan',
+         "tb_presensi_karyawan.id_karyawan = tb_karyawan.id_karyawan AND tb_presensi_karyawan.tanggal = '$tanggal'",
          'right'
       );
 
@@ -100,24 +100,24 @@ class PresensiGuruModel extends Model implements PresensiInterface
 
          return $filteredResult;
       } else {
-         $this->where(['tb_presensi_guru.id_kehadiran' => $idKehadiran]);
+         $this->where(['tb_presensi_karyawan.id_kehadiran' => $idKehadiran]);
          return $this->findAll();
       }
    }
 
    public function updatePresensi(
       $idPresensi,
-      $idGuru,
+      $idKaryawan,
       $tanggal,
       $idKehadiran,
       $jamMasuk,
       $jamKeluar,
       $keterangan
    ) {
-      $presensi = $this->getPresensiByIdGuruTanggal($idGuru, $tanggal);
+      $presensi = $this->getPresensiByIdKaryawanTanggal($idKaryawan, $tanggal);
 
       $data = [
-         'id_guru' => $idGuru,
+         'id_karyawan' => $idKaryawan,
          'tanggal' => $tanggal,
          'id_kehadiran' => $idKehadiran,
          'keterangan' => $keterangan ?? $presensi['keterangan'] ?? ''

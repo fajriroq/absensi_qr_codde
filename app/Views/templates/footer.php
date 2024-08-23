@@ -3,8 +3,8 @@
       <nav class="float-left">
          <ul>
             <li>
-               <a href="https://www.instagram.com/ikhsan3adi/">
-                  Instagram
+               <a href="">
+                  ABSENSI KARYAWAN DESA
                </a>
             </li>
          </ul>

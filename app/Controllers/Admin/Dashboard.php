@@ -3,12 +3,11 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
-
-use App\Models\GuruModel;
+use App\Models\KaryawanModel;
 use App\Models\SiswaModel;
 use App\Models\KelasModel;
 use App\Models\PetugasModel;
-use App\Models\PresensiGuruModel;
+use App\Models\PresensiKaryawanModel; // Ganti PresensiGuruModel dengan PresensiKaryawanModel
 use App\Models\PresensiSiswaModel;
 use CodeIgniter\I18n\Time;
 use Config\AbsensiSekolah as ConfigAbsensiSekolah;
@@ -16,22 +15,22 @@ use Config\AbsensiSekolah as ConfigAbsensiSekolah;
 class Dashboard extends BaseController
 {
    protected SiswaModel $siswaModel;
-   protected GuruModel $guruModel;
+   protected KaryawanModel $karyawanModel; // Ganti GuruModel dengan KaryawanModel
 
-   protected KelasModel $KelasModel;
+   protected KelasModel $kelasModel; // Pastikan nama variabel mengikuti konvensi penamaan
 
    protected PresensiSiswaModel $presensiSiswaModel;
-   protected PresensiGuruModel $presensiGuruModel;
+   protected PresensiKaryawanModel $presensiKaryawanModel; // Ganti PresensiGuruModel dengan PresensiKaryawanModel
 
    protected PetugasModel $petugasModel;
 
    public function __construct()
    {
       $this->siswaModel = new SiswaModel();
-      $this->guruModel = new GuruModel();
-      $this->KelasModel = new KelasModel();
+      $this->karyawanModel = new KaryawanModel(); // Ganti GuruModel dengan KaryawanModel
+      $this->kelasModel = new KelasModel(); // Pastikan nama variabel mengikuti konvensi penamaan
       $this->presensiSiswaModel = new PresensiSiswaModel();
-      $this->presensiGuruModel = new PresensiGuruModel();
+      $this->presensiKaryawanModel = new PresensiKaryawanModel(); // Ganti PresensiGuruModel dengan PresensiKaryawanModel
       $this->petugasModel = new PetugasModel();
    }
 
@@ -41,7 +40,7 @@ class Dashboard extends BaseController
 
       $dateRange = [];
       $siswaKehadiranArray = [];
-      $guruKehadiranArray = [];
+      $karyawanKehadiranArray = []; // Ganti guruKehadiranArray dengan karyawanKehadiranArray
 
       for ($i = 6; $i >= 0; $i--) {
          $date = $now->subDays($i)->toDateString();
@@ -59,10 +58,10 @@ class Dashboard extends BaseController
                ->where(['tb_presensi_siswa.tanggal' => "$date", 'tb_presensi_siswa.id_kehadiran' => '1'])->findAll())
          );
          array_push(
-            $guruKehadiranArray,
-            count($this->presensiGuruModel
-               ->join('tb_guru', 'tb_presensi_guru.id_guru = tb_guru.id_guru', 'left')
-               ->where(['tb_presensi_guru.tanggal' => "$date", 'tb_presensi_guru.id_kehadiran' => '1'])->findAll())
+            $karyawanKehadiranArray, // Ganti guruKehadiranArray dengan karyawanKehadiranArray
+            count($this->presensiKaryawanModel // Ganti presensiGuruModel dengan presensiKaryawanModel
+               ->join('tb_karyawan', 'tb_presensi_karyawan.id_karyawan = tb_karyawan.id_karyawan', 'left')
+               ->where(['tb_presensi_karyawan.tanggal' => "$date", 'tb_presensi_karyawan.id_kehadiran' => '1'])->findAll())
          );
       }
 
@@ -73,15 +72,15 @@ class Dashboard extends BaseController
          'ctx' => 'dashboard',
 
          'siswa' => $this->siswaModel->getAllSiswaWithKelas(),
-         'guru' => $this->guruModel->getAllGuru(),
+         'karyawan' => $this->karyawanModel->getAllKaryawan(), // Ganti guru dengan karyawan
 
-         'kelas' => $this->KelasModel->getDataKelas(),
+         'kelas' => $this->kelasModel->getDataKelas(), // Pastikan nama variabel mengikuti konvensi penamaan
 
          'dateRange' => $dateRange,
          'dateNow' => $now->toLocalizedString('d MMMM Y'),
 
          'grafikKehadiranSiswa' => $siswaKehadiranArray,
-         'grafikkKehadiranGuru' => $guruKehadiranArray,
+         'grafikKehadiranKaryawan' => $karyawanKehadiranArray, // Ganti grafikKehadiranGuru dengan grafikKehadiranKaryawan
 
          'jumlahKehadiranSiswa' => [
             'hadir' => count($this->presensiSiswaModel->getPresensiByKehadiran('1', $today)),
@@ -90,11 +89,11 @@ class Dashboard extends BaseController
             'alfa' => count($this->presensiSiswaModel->getPresensiByKehadiran('4', $today))
          ],
 
-         'jumlahKehadiranGuru' => [
-            'hadir' => count($this->presensiGuruModel->getPresensiByKehadiran('1', $today)),
-            'sakit' => count($this->presensiGuruModel->getPresensiByKehadiran('2', $today)),
-            'izin' => count($this->presensiGuruModel->getPresensiByKehadiran('3', $today)),
-            'alfa' => count($this->presensiGuruModel->getPresensiByKehadiran('4', $today))
+         'jumlahKehadiranKaryawan' => [ // Ganti jumlahKehadiranGuru dengan jumlahKehadiranKaryawan
+            'hadir' => count($this->presensiKaryawanModel->getPresensiByKehadiran('1', $today)),
+            'sakit' => count($this->presensiKaryawanModel->getPresensiByKehadiran('2', $today)),
+            'izin' => count($this->presensiKaryawanModel->getPresensiByKehadiran('3', $today)),
+            'alfa' => count($this->presensiKaryawanModel->getPresensiByKehadiran('4', $today))
          ],
 
          'petugas' => $this->petugasModel->getAllPetugas(),
